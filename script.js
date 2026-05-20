@@ -4,6 +4,7 @@ const month = date.getMonth() + 1;
 const weekday = date.getDay();
 const hours = date.getHours();
 const minutes = date.getMinutes();
+const seconds = date.getSeconds();
 
 const hanziNums = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 
@@ -18,23 +19,23 @@ function formatYear(y) {
 
 function formatCompositeNum(num) {
   if (num <= 10) {
-    return {
-      hanzi: hanziNums[num],
-      pinyin: ["líng", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ", "shí"][num]
+    return { 
+      hanzi: hanziNums[num], 
+      pinyin: ["líng", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ", "shí"][num] 
     };
   }
   let tens = Math.floor(num / 10);
   let ones = num % 10;
-
+  
   let hanziTens = tens === 1 ? "十" : hanziNums[tens] + "十";
   let hanziOnes = ones === 0 ? "" : hanziNums[ones];
-
+  
   let pinyinTens = tens === 1 ? "shí" : ["", "", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ"][tens] + " shí";
   let pinyinOnes = ones === 0 ? "" : " " + ["líng", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ"][ones];
-
-  return {
-    hanzi: hanziTens + hanziOnes,
-    pinyin: (pinyinTens + pinyinOnes).trim()
+  
+  return { 
+    hanzi: hanziTens + hanziOnes, 
+    pinyin: (pinyinTens + pinyinOnes).trim() 
   };
 }
 
@@ -56,24 +57,25 @@ const añoData = formatYear(year);
 const estacionData = getEstacion(month);
 const horaHz = formatCompositeNum(hours);
 const minHz = formatCompositeNum(minutes);
+const secHz = formatCompositeNum(seconds);
 
 let widget = new ListWidget();
 widget.backgroundColor = new Color("#09090b");
 widget.setPadding(10, 12, 10, 12);
 
-let timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} `;
-let timeHzStr = `${horaHz.hanzi} 点: ${minHz.hanzi} 分`;
-let timePyStr = `${horaHz.pinyin} diǎn: ${minHz.pinyin} fēn`;
+let timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+let timeHzStr = `${horaHz.hanzi}点 : ${minHz.hanzi}分 : ${secHz.hanzi}秒`;
+let timePyStr = `${horaHz.pinyin} diǎn : ${minHz.pinyin} fēn : ${secHz.pinyin} miǎo`;
 
 let clockHzText = widget.addText(timeHzStr);
 clockHzText.textColor = new Color("#ff453a");
-clockHzText.font = Font.boldSystemFont(30);
+clockHzText.font = Font.boldSystemFont(26);
 clockHzText.minimumScaleFactor = 0.8;
 
-let clockPyText = widget.addText(`${timePyStr}  | ${timeStr} `);
+let clockPyText = widget.addText(`${timePyStr}  |  ${timeStr}`);
 clockPyText.textColor = new Color("#ffffff");
 clockPyText.textOpacity = 0.6;
-clockPyText.font = Font.systemFont(11);
+clockPyText.font = Font.systemFont(10);
 
 widget.addSpacer(14);
 
@@ -83,37 +85,37 @@ grid.layoutVertically();
 let row1 = grid.addStack();
 row1.layoutHorizontally();
 
-let cell1 = row1.addStack();
+let cell1 = row1.addStack(); 
 cell1.layoutVertically();
 cell1.size = new Size(160, 0);
-addBlock(cell1, diasHanzi[weekday], `${diasPinyin[weekday]} ${diasEs[weekday]} `);
+addBlock(cell1, diasHanzi[weekday], `${diasPinyin[weekday]} ${diasEs[weekday]}`);
 
-let cell2 = row1.addStack();
+let cell2 = row1.addStack(); 
 cell2.layoutVertically();
-addBlock(cell2, mesesHanzi[month], `${mesesPinyin[month]} ${month} `);
+addBlock(cell2, mesesHanzi[month], `${mesesPinyin[month]} ${month}`);
 
 grid.addSpacer(14);
 
 let row2 = grid.addStack();
 row2.layoutHorizontally();
 
-let cell3 = row2.addStack();
+let cell3 = row2.addStack(); 
 cell3.layoutVertically();
 cell3.size = new Size(160, 0);
-addBlock(cell3, estacionData.hanzi, `${estacionData.pinyin} ${estacionData.es} `);
+addBlock(cell3, estacionData.hanzi, `${estacionData.pinyin} ${estacionData.es}`);
 
-let cell4 = row2.addStack();
+let cell4 = row2.addStack(); 
 cell4.layoutVertically();
-addBlock(cell4, añoData.hanzi, `${añoData.pinyin} ${year} `);
+addBlock(cell4, añoData.hanzi, `${añoData.pinyin} ${year}`);
 
 function addBlock(stack, hanzi, sub) {
   let hText = stack.addText(hanzi);
   hText.textColor = new Color("#ff453a");
   hText.font = Font.boldSystemFont(23);
   hText.minimumScaleFactor = 0.75;
-
+  
   stack.addSpacer(2);
-
+  
   let sText = stack.addText(sub);
   sText.textColor = new Color("#ffffff");
   sText.textOpacity = 0.7;
